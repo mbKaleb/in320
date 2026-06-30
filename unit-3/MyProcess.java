@@ -2,7 +2,7 @@ import java.util.Optional;
 
 public class MyProcess {
 
-    private enum State {
+    public enum pState {
 
         READY("Ready"),
         RUNNING("Running"),
@@ -11,7 +11,7 @@ public class MyProcess {
 
         private String displayName;
 
-        State(String displayName){
+        pState(String displayName){
             this.displayName = displayName; //string
         }
 
@@ -20,19 +20,19 @@ public class MyProcess {
         }
     }
 
-    private State state;
+    private pState state;
     // private String desc;
     private int id;
 
 
     MyProcess(int id) {
         this.id = id;
-        this.state = State.READY;
+        this.state = pState.READY;
     }
 
     // Private getter functions
     private void isAlive() {
-        if (this.state == State.TERMINATED){
+        if (this.state == pState.TERMINATED){
             throw new IllegalStateException("Error: Process terminated");
         }
         else return;
@@ -40,32 +40,32 @@ public class MyProcess {
 
     private void pTerminate() {
         this.isAlive();
-        this.state = State.TERMINATED;
+        this.state = pState.TERMINATED;
         System.err.println("Process:" +id +" terminated");
     }
 
     private void pReady(){
         this.isAlive();
-        this.state = State.READY;
+        this.state = pState.READY;
         System.err.println("Process: " + id + " ready");
     }
 
     private void pWait(){
         this.isAlive();
-        this.state = State.WAITING;
+        this.state = pState.WAITING;
         System.err.println("Process: " + id + " waiting");
 
     }
     // public void pStart(){}
     private void pRun(){
         this.isAlive();
-        this.state = State.RUNNING;
+        this.state = pState.RUNNING;
         System.err.println("Process: " + id + " running");
 
     }
 
     // public setter + getter functions
-    public void transitionState(State newState){
+    public void transitionState(pState newState){
         switch (newState) {
             case READY:
                 this.pReady();
@@ -85,7 +85,7 @@ public class MyProcess {
 
     }
 
-    public State getState() {
+    public pState getState() {
         return state;
     }
 
