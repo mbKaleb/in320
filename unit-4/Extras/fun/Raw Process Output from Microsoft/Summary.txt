@@ -1,0 +1,14 @@
+To dig deeper into the deadlock, 
+
+I captured a memory dump of the Java process from Task Manager and parsed it on my Mac using a Python library called minidump. 
+
+Inside the MinidumpMiscInfo section, the ProcessorCurrentIdleState value was 1, indicating the CPU was idle at the moment of capture. This lines up with what I'd expect during a deadlock: both threads are blocked waiting to acquire a lock, not actively executing instructions, so the processor has nothing to do and simply sits idle rather than spinning or consuming cycles.
+
+
+The dump's PEB section also confirmed I was analyzing the right process, since it recorded the exact command used to launch it: java.exe Deadlock.DeadLockExample.
+
+
+
+To dig deeper on the deadlock I wanted to find more information on the behavior of our program since Task Manager was too opaque, displaying fluxuating cpu usage and some constant memory usage by the java process. I pulled the raw DMP file from the DeadLockExample process via Task Manager. I captured the log data, transfered it back to my local machine, and used a python library called minidump to parse and view the logs. This parsing software was using incorrect constants associated with Microsofts enums for its PROCESSOR_ARCHITECTURE enum; details in:  ../fun which I had to fix before moving on. 
+
+Inside the parsed .DMP, DMP-output.txt I found both threads blocked waiting to acquire a lock, not executing instructions. The dump's PEB section confirmed I was analyzing the right process, since it recorded the exact command used to launch it: java.exe Deadlock.DeadLockExample. The dump lists 22 threads total. Most of these are internal JVM threads, garbage collection, JIT compilation, not just my two application threads. The dump doesn't label threads by name, so pinpointing exactly which two threads are holding lock1 and lock2 would require manually walking each thread's stack .

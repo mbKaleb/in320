@@ -1,0 +1,1 @@
+During the deadlock, the QEMU monitor shows both cpus as active rather than frozen. info registers show a full ARM64 register dump with program counter pointing into kernel space code fffff80. This confirms that the deadlock is not a hardware level hangup. The virtual cpu isnt stuck at 100%. Instead, the two threads are blocked, while the rest of the system is usable.
